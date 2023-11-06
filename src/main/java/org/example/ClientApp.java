@@ -12,10 +12,10 @@ public class ClientApp {
 
     public static void main(String[] args) {
         try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-                BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
-                PrintWriter outToServer = new PrintWriter(socket.getOutputStream(), true);
-                BufferedReader inFromServer = new BufferedReader(new InputStreamReader(socket
-                        .getInputStream()))) {
+             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+             PrintWriter outToServer = new PrintWriter(socket.getOutputStream(), true);
+             BufferedReader inFromServer = new BufferedReader(new InputStreamReader(socket
+                     .getInputStream()))) {
             String messageToServer;
             String messageFromServer;
             while (true) {
