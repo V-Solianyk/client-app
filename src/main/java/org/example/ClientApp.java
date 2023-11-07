@@ -22,9 +22,9 @@ public class ClientApp {
         try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
              BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
              PrintWriter outToServer = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader inputFromServer = new BufferedReader(new InputStreamReader(socket
+             BufferedReader inFromServer = new BufferedReader(new InputStreamReader(socket
                      .getInputStream()))) {
-            receiveTechnicalInfoFromServer(inputFromServer);
+            receiveTechnicalInfoFromServer(inFromServer);
             sendClientMessagesToServer(userInput, outToServer);
         } catch (IOException e) {
             LOGGER.error("An error occurred while communicating with the server."
