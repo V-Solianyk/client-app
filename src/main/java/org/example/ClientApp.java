@@ -20,11 +20,11 @@ public class ClientApp {
 
     private static void startClientApp() {
         try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
-             PrintWriter outToServer = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader inFromServer = new BufferedReader(new InputStreamReader(socket
-                     .getInputStream()))) {
-            receiveTechnicalInfoFromServer(inFromServer);
+                BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+                PrintWriter outToServer = new PrintWriter(socket.getOutputStream(), true);
+                BufferedReader inputFromServer = new BufferedReader(new InputStreamReader(socket
+                        .getInputStream()))) {
+            receiveTechnicalInfoFromServer(inputFromServer);
             sendClientMessagesToServer(userInput, outToServer);
         } catch (IOException e) {
             LOGGER.error("An error occurred while communicating with the server."
