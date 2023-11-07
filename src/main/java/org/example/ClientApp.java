@@ -9,11 +9,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ClientApp {
+    private static final Logger LOGGER = LogManager.getLogger(ClientApp.class.getName());
     private static final String SERVER_ADDRESS = "127.0.0.1";
     private static final String STOP_CLIENT = "exit";
     private static final int SERVER_PORT = 3344;
-    private static Thread thread = null;
-    private static final Logger LOGGER = LogManager.getLogger(ClientApp.class.getName());
 
     public static void main(String[] args) {
         startClientApp();
@@ -21,37 +20,20 @@ public class ClientApp {
 
     private static void startClientApp() {
         try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-                BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
-                PrintWriter outToServer = new PrintWriter(socket.getOutputStream(), true);
-                BufferedReader inFromServer = new BufferedReader(new InputStreamReader(socket
-                        .getInputStream()))) {
+             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+             PrintWriter outToServer = new PrintWriter(socket.getOutputStream(), true);
+             BufferedReader inFromServer = new BufferedReader(new InputStreamReader(socket
+                     .getInputStream()))) {
             receiveTechnicalInfoFromServer(inFromServer);
             sendClientMessagesToServer(userInput, outToServer);
         } catch (IOException e) {
             LOGGER.error("An error occurred while communicating with the server."
                     + " Error details: " + e.getMessage(), e);
-        } finally {
-            if (thread != null) {
-                thread.interrupt();
-            }
-        }
-    }
-
-    private static void sendClientMessagesToServer(BufferedReader userInput,
-                                                   PrintWriter outToServer) throws IOException {
-        String messageToServer;
-        while (true) {
-            messageToServer = userInput.readLine();
-            outToServer.println(messageToServer);
-            if (messageToServer.equalsIgnoreCase(STOP_CLIENT)) {
-                break;
-            }
-            LOGGER.info("Message sent to the server: " + messageToServer);
         }
     }
 
     private static void receiveTechnicalInfoFromServer(BufferedReader inFromServer) {
-        thread = new Thread(() -> {
+        new Thread(() -> {
             try {
                 String messageFromServer;
                 while (true) {
@@ -65,7 +47,19 @@ public class ClientApp {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        });
-        thread.start();
+        }).start();
+    }
+
+    private static void sendClientMessagesToServer(BufferedReader userInput,
+                                                   PrintWriter outToServer) throws IOException {
+        String messageToServer;
+        while (true) {
+            messageToServer = userInput.readLine();
+            outToServer.println(messageToServer);
+            if (messageToServer.equalsIgnoreCase(STOP_CLIENT)) {
+                break;
+            }
+            LOGGER.info("Message sent to the server: " + messageToServer);
+        }
     }
 }
